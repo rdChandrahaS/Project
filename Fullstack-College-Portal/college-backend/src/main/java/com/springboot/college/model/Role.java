@@ -17,5 +17,5 @@ public class Role {
     private Integer id;
 
     @Column(length = 20)
-    private String name; // e.g., ROLE_STUDENT, ROLE_TEACHER
+    private String name; /* ex - ROLE_STUDENT, ROLE_TEACHER */
 }

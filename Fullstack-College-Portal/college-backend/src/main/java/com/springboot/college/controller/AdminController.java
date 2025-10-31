@@ -31,23 +31,23 @@ public class AdminController {
 
     @PostMapping("/create-teacher")
     public ResponseEntity<?> createTeacher(@RequestBody TeacherRegistrationDto teacherDto) {
-        // 1. Check if username already exists
+        /*  Checking if username already exists */
         if (userRepository.findByUsername(teacherDto.getUsername()).isPresent()) {
             return ResponseEntity.status(400).body("Username (Teacher ID) already exists");
         }
 
-        // 2. Find the TEACHER role
+        /*  Finding the TEACHER role */
         Role teacherRole = roleRepository.findByName("ROLE_TEACHER")
                 .orElseThrow(() -> new RuntimeException("Error: ROLE_TEACHER is not found."));
 
-        // 3. Create new User
+        /* Creating new User */
         User teacherUser = new User();
         teacherUser.setUsername(teacherDto.getUsername());
         teacherUser.setPassword(passwordEncoder.encode(teacherDto.getPassword()));
         teacherUser.setRoles(Set.of(teacherRole));
         User savedUser = userRepository.save(teacherUser);
 
-        // 4. Create new Teacher Profile
+        /* Creating new Teacher Profile */
         TeacherProfile teacherProfile = new TeacherProfile();
         teacherProfile.setUser(savedUser);
         teacherProfile.setName(teacherDto.getName());

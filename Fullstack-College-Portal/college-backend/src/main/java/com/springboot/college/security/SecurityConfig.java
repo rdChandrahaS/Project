@@ -18,7 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // To enable @PreAuthorize
+@EnableMethodSecurity /* To enable @PreAuthorize */ 
 public class SecurityConfig {
 
     @Autowired
@@ -41,15 +41,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
+            .csrf(csrf -> csrf.disable()) /* Disable CSRF */
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) /* Stateless session */
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/**").permitAll() // Allow login/register
-                .anyRequest().authenticated() // All other requests need auth
+                .requestMatchers("/api/auth/**").permitAll() /* Allow login/register */
+                .anyRequest().authenticated() /* All other requests need auth */
             )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); /* Add JWT filter */
 
-        // Add CORS filter
+        /* Add CORS filter */
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
@@ -57,11 +57,10 @@ public class SecurityConfig {
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        // This is crucial for connecting React
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:3000"); // Your React app's URL
-        configuration.addAllowedMethod("*"); // Allow all methods (GET, POST, PUT, etc.)
-        configuration.addAllowedHeader("*"); // Allow all headers
+        configuration.addAllowedOrigin("http://localhost:3000"); /* React app's URL */
+        configuration.addAllowedMethod("*"); /* Allow all methods (GET, POST, PUT, etc.) */
+        configuration.addAllowedHeader("*"); /* Allow all headers */
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -33,71 +33,71 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         
-        // Check if data is already there to avoid duplicates
+        /* Checking if data is already there to avoid duplicates */
         if (roleRepository.count() > 0) {
             return;
         }
 
         System.out.println("--- Initializing new database data ---");
         
-        // --- Create Roles ---
+        /* --- Create Roles --- */
+
+        /*  Student  */
         Role studentRole = new Role();
         studentRole.setName("ROLE_STUDENT");
         roleRepository.save(studentRole);
-
+        
+        /*  Teacher  */
         Role teacherRole = new Role();
         teacherRole.setName("ROLE_TEACHER");
         roleRepository.save(teacherRole);
-
+        
+        /*  Admin  */
         Role adminRole = new Role();
         adminRole.setName("ROLE_ADMIN");
         roleRepository.save(adminRole);
 
-        // --- Create Sample Student ---
-        // We create both objects first, then link them
+        /* --- Create Sample Student --- */
+        /* Creating both objects first, then link them */
         User studentUser = new User();
         studentUser.setUsername("student");
         studentUser.setPassword(passwordEncoder.encode("123"));
         studentUser.setRoles(Set.of(studentRole));
         
         StudentProfile studentProfile = new StudentProfile();
-        studentProfile.setName("Sample Student");
-        studentProfile.setBatch("2025");
-        studentProfile.setYear(2);
-        studentProfile.setPersonalData("sample.student@college.com");
+        studentProfile.setName("Rajdeep Debnath");
+        studentProfile.setBatch("2023");
+        studentProfile.setYear(3);
+        studentProfile.setPersonalData("rdx741257@gmail.com");
         
-        // Link them
+        /*  Linking  */
         studentProfile.setUser(studentUser);
         
-        // Now, we just save the PROFILE. The User will be saved automatically.
         studentProfileRepository.save(studentProfile);
 
-        // --- Create Sample Teacher ---
+        /* --- Create Sample Teacher --- */
         User teacherUser = new User();
         teacherUser.setUsername("teacher");
         teacherUser.setPassword(passwordEncoder.encode("123"));
         teacherUser.setRoles(Set.of(teacherRole));
 
         TeacherProfile teacherProfile = new TeacherProfile();
-        teacherProfile.setName("Prof...");
+        teacherProfile.setName("Pijush Bairi");
         teacherProfile.setDepartment("Information Technology");
-        teacherProfile.setPersonalData("prof.teacher@college.com");
+        teacherProfile.setPersonalData("pijushbairi@gmail.com");
         
-        // Link them
         teacherProfile.setUser(teacherUser);
         
-        // Save the PROFILE
         teacherProfileRepository.save(teacherProfile);
         
-        // 6. CREATE ADMIN USER
+        /* CREATE ADMIN USER */
         User adminUser = new User();
         adminUser.setUsername("admin");
         adminUser.setPassword(passwordEncoder.encode("123"));
-        // Admin gets ONLY the admin role
-        adminUser.setRoles(Set.of(adminRole)); // <-- TO THIS
+        /* Admin gets ONLY the admin role */
+        adminUser.setRoles(Set.of(adminRole));
         userRepository.save(adminUser);
         
-        // Admin doesn't have a profile, so we just save the user
         userRepository.save(adminUser);
 
         System.out.println("--- Database Initialized Successfully ---");

@@ -21,7 +21,7 @@ public class Result {
     private Long id;
 
     private String subject;
-    private String marks; // Using String for grades like 'A+' or '85/100'
+    private String marks; /* Using String for grades like 'A+' or '85/100' */
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)

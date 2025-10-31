@@ -1,18 +1,32 @@
 package com.springboot.college.controller;
 
-import com.springboot.college.dto.ResultUpdateDto;
-import com.springboot.college.dto.StudentRegistrationDto;
-import com.springboot.college.model.*; // Import all models
-import com.springboot.college.repository.*; // Import all repos
-import org.springframework.beans.factory.annotation.Autowired;
+import java.security.Principal;
+import java.util.Optional;
+import java.util.Set; /* Import all models */
+
+import org.springframework.beans.factory.annotation.Autowired; /* Import all repos */
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*; // Import all web annotations
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal; // Import Principal
-import java.util.Optional;
-import java.util.Set;
+import com.springboot.college.dto.ResultUpdateDto;
+import com.springboot.college.dto.StudentRegistrationDto;
+import com.springboot.college.model.Result;
+import com.springboot.college.model.Role;
+import com.springboot.college.model.StudentProfile;
+import com.springboot.college.model.TeacherProfile;
+import com.springboot.college.model.User;
+import com.springboot.college.repository.ResultRepository;
+import com.springboot.college.repository.RoleRepository;
+import com.springboot.college.repository.StudentProfileRepository;
+import com.springboot.college.repository.TeacherProfileRepository;
+import com.springboot.college.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/teacher")
@@ -30,13 +44,12 @@ public class TeacherController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // --- ADD THIS NEW REPO ---
     @Autowired
     private TeacherProfileRepository teacherProfileRepository;
 
+    /* Updating Result */
     @PostMapping("/results/update")
     public ResponseEntity<?> updateStudentResult(@RequestBody ResultUpdateDto resultDto) {
-        // ... (code for updating results - no change) ...
         Optional<StudentProfile> studentOpt = studentProfileRepository.findById(resultDto.getStudentId());
         if (studentOpt.isEmpty()) {
             return ResponseEntity.status(404).body("Student not found with ID: " + resultDto.getStudentId());
@@ -59,9 +72,9 @@ public class TeacherController {
         return ResponseEntity.ok(savedResult);
     }
     
+    /* Creating Result */
     @PostMapping("/create-student")
     public ResponseEntity<?> createStudent(@RequestBody StudentRegistrationDto studentDto) {
-        // ... (code for creating student - no change) ...
         if (userRepository.findByUsername(studentDto.getUsername()).isPresent()) {
             return ResponseEntity.status(400).body("Username (Student ID) already exists");
         }
@@ -82,8 +95,8 @@ public class TeacherController {
         return ResponseEntity.ok("Student created successfully!");
     }
 
-    // --- ADD THESE NEW ENDPOINTS FOR TEACHER'S OWN PROFILE ---
-
+    
+    /* Teacher's profile */
     @GetMapping("/profile")
     public ResponseEntity<?> getTeacherProfile(Principal principal) {
         Optional<TeacherProfile> profileOpt = teacherProfileRepository.findByUser_Username(principal.getName());
@@ -93,6 +106,7 @@ public class TeacherController {
         return ResponseEntity.ok(profileOpt.get());
     }
 
+    /* Updaten Teachers profile */
     @PutMapping("/profile")
     public ResponseEntity<?> updateTeacherProfile(@RequestBody TeacherProfile updatedProfile, Principal principal) {
         Optional<TeacherProfile> profileOpt = teacherProfileRepository.findByUser_Username(principal.getName());
